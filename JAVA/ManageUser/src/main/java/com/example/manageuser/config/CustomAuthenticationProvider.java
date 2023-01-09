@@ -8,30 +8,41 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final SHA256 sha256;
+    String insertPw;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
-        String userEmail = token.getName();
-        String userPassword = (String) token.getCredentials();
+        String username = authentication.getName();
+        String password = (String) authentication.getCredentials();
 
-        User user = (User) userDetailsService.loadUserByUsername(userEmail);
-        if(passwordEncoder.matches(userPassword, user.getPassword()) == false){
-            throw new BadCredentialsException(user.getUsername() + " 비밀번호를 확인해주세요.");
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        try {
+            insertPw = sha256.encrypt(sha256.encrypt(password));
+            if(insertPw.equals(sha256.encrypt(sha256.encrypt(userDetails.getPassword())))){
+                throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
-        return new UsernamePasswordAuthenticationToken(user, userPassword,user.getAuthorities());
+
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return true;
     }
 
 }

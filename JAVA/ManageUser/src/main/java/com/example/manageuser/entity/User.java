@@ -2,35 +2,44 @@ package com.example.manageuser.entity;
 
 
 import com.example.manageuser.domain.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.manageuser.dto.UserDto;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.Pattern;
+import java.util.*;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
+@Table(name = "users")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long no;
+
+
+    @Column(name = "userId")
     private String id;
 
+    @Column(name = "userPw")
     private String password;
 
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "userRole")
     private Role role;
 
-    @Column(unique = true)
+
+    @Column(name = "userEmail")
     @Email
     private String email;
 
@@ -42,11 +51,21 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
         Set<GrantedAuthority> roles = new HashSet<>();
         roles.add(new SimpleGrantedAuthority(role.getValue()));
         return roles;
+    }
+
+    public static User createUser(UserDto userDto){
+        User user = new User();
+        user.id = userDto.getUserId();
+        user.email = user.getEmail();
+        user.password = user.getPassword();
+        user.role = Role.USER;
+        return user;
     }
 
     @Override

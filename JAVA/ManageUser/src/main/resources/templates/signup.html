@@ -13,17 +13,25 @@
             <img src="img/springBootImg.png" class="rounded mx-auto d-block" style="width:40%">
             <h5 class="mb-5">Sign up</h5>
             <form action="/signup" method="post">
+
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
-                           name="email"
+                    <input type="text" class="form-control" id="floatingId" placeholder="name@example.com"
+                           name="ID"
                            required>
-                    <label for="floatingInput">Please enter your email address.</label>
+                    <label for="floatingInput">Please enter your ID.</label>
                 </div>
+
                 <div class="form-floating">
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
                            name="password"
                            required>
                     <label for="floatingPassword">Please enter your password.</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+                           name="email"
+                           required>
+                    <label for="floatingInput">Please enter your email address.</label>
                 </div>
                 <button type="submit" class="btn mt-4 w-100 text-white" style="background-color: #6CB33E">Sign up</button>
             </form>

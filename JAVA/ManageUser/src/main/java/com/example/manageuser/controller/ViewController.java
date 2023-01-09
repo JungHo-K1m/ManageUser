@@ -25,14 +25,6 @@ public class ViewController {
         return "fail";
     }
 
-    @RequestMapping("/admin")
-    ModelAndView andView(){
-        List<UserDto> userDtolist = userRepository.findAll().stream().map(u -> UserDto.builder().id(u.getId()).email(u.getEmail()).password(u.getPassword()).role(u.getRole()).build()).collect(Collectors.toList());
-        ModelAndView modelAndView = new ModelAndView("/admin");
-        modelAndView.addObject("userList",userDtolist);
-
-        return modelAndView;
-    }
 
 
     @RequestMapping("/signup")

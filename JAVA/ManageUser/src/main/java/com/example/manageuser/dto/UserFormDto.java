@@ -10,10 +10,10 @@ import javax.validation.constraints.Email;
 @Getter
 @Setter
 public class UserFormDto {
-    @NotNull
-    @Email
-    private  String userEmail;
 
-    @NotNull
-    private String userPw;
+    private String user_id;
+
+    private String user_email;
+
+    private String user_pw;
 }

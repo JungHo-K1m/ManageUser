@@ -3,6 +3,7 @@ package com.example.manageuser.service.impl;
 import com.example.manageuser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class UserDetailServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
+
     @Override
-    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         return Optional
-                .ofNullable(userRepository.findByEmail(userEmail))
-                .orElseThrow(()-> new BadCredentialsException("이메일 주소를 확인해주세요."));
+                .ofNullable(userRepository.findById(userId).get())
+                .orElseThrow(()-> new BadCredentialsException("등록되지 않은 사용자입니다."));
     }
+
 }

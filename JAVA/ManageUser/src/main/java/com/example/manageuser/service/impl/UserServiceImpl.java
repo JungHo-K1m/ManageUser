@@ -15,17 +15,30 @@ import static com.example.manageuser.domain.Role.USER;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public User saveUser(User user){
+        validateDuplicateUser(user);
+        return userRepository.save(user);
+    }
+
+    private void validateDuplicateUser(User user) {
+        /*User findUser = userRepository.findByEmail(user.getEmail());
+        if(findUser != null){
+            throw new IllegalStateException("이미 가입된 회원임다.");
+        }*/
+    }
 
     @Override
     public UserDto createUser(UserFormDto userFormDto){
-        if(userRepository.findByEmail(userFormDto.getUserEmail()) != null){
+        /*User findByEmail = userRepository.findByEmail(userFormDto.getUser_email());
+        if(findByEmail != null){
             return null;
         }
         User user = userRepository.save(User.builder()
-                .password(bCryptPasswordEncoder.encode(userFormDto.getUserPw()))
-                .email(userFormDto.getUserEmail())
+                .password(userFormDto.getUser_pw())
+                .email(userFormDto.getUser_email())
                 .role(USER).build());
 
         return UserDto.builder()
@@ -33,5 +46,7 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .build();
+                */
+        return new UserDto();
     }
 }
